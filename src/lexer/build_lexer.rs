@@ -2,7 +2,7 @@ use std::error::Error;
 
 use crate::lexer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
 
-fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Error>> {
+pub fn build_lexer(expr: &str) -> Result<Vec<Token>, Box<dyn Error>> {
     let mut tokens: Vec<Token> = vec![];
     let mut number = String::new();
     let mut identifier = String::new();
@@ -103,7 +103,7 @@ fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Error>> 
 
     clear_identifier_or_number(&mut identifier, &mut number, &mut tokens);
 
-    Ok(tokens.into_iter())
+    Ok(tokens.into_iter().collect())
 }
 
 fn clear_identifier(identifier: &mut String) -> Option<Token> {

@@ -1,3 +1,4 @@
+use crate::lexer::build_lexer::build_lexer;
 use std::{env, error::Error, process};
 
 pub mod lexer;
@@ -12,6 +13,17 @@ fn main() {
     });
 
     print!("Expression to be evaluated is: {}", expr);
+
+    let tokens = build_lexer(expr).unwrap_or_else(|error| {
+        eprintln!("{}", error);
+        process::exit(1);
+    });
+
+    print!("Tokens in expression:");
+
+    for token in tokens {
+        println!("{:#?}", token)
+    }
 }
 
 fn parse_config(args: &Vec<String>) -> Result<&str, Box<dyn Error>> {
