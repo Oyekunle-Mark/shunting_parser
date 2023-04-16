@@ -107,7 +107,7 @@ pub fn build_lexer(expr: &str) -> Result<Vec<Token>, Box<dyn Error>> {
 }
 
 fn clear_identifier(identifier: &mut String) -> Option<Token> {
-    if !identifier.is_empty() {
+    if identifier.is_empty() {
         return None;
     }
 
@@ -139,7 +139,7 @@ fn clear_identifier(identifier: &mut String) -> Option<Token> {
 }
 
 fn clear_number(number: &mut String) -> Option<Token> {
-    if !number.is_empty() {
+    if number.is_empty() {
         return None;
     }
 
