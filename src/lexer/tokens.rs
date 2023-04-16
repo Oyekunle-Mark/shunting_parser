@@ -1,18 +1,18 @@
-enum IAssociativity {
+pub enum IAssociativity {
     Left,
     Right,
 }
 
-enum IConstants {
+pub enum IConstants {
     Pi,
 }
 
-enum IFunctions {
+pub enum IFunctions {
     Max,
     Min,
 }
 
-enum IToken {
+pub enum IToken {
     Pow,
     Mul,
     Div,
@@ -25,9 +25,9 @@ enum IToken {
     Const(IConstants),
 }
 
-struct Token {
-    token_type: IToken,
-    associativity: IAssociativity,
-    precedence: Option<u8>,
-    lexeme: String,
+pub struct Token {
+    pub token_type: IToken,
+    pub associativity: IAssociativity,
+    pub precedence: Option<u8>,
+    pub lexeme: String,
 }
