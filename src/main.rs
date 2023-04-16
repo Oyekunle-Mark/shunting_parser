@@ -7,12 +7,13 @@ const PARSER_OPTION: &str = "eval";
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+
     let expr = parse_config(&args).unwrap_or_else(|error| {
         eprintln!("{}", error);
         process::exit(1);
     });
 
-    print!("Expression to be evaluated is: {}", expr);
+    println!("Expression to be evaluated is: {}", expr);
 
     let tokens = build_lexer(expr).unwrap_or_else(|error| {
         eprintln!("{}", error);
@@ -21,9 +22,7 @@ fn main() {
 
     print!("Tokens in expression:");
 
-    for token in tokens {
-        println!("{:#?}", token)
-    }
+    tokens.for_each(|token| println!("{:#?}", token));
 }
 
 fn parse_config(args: &Vec<String>) -> Result<&str, Box<dyn Error>> {
