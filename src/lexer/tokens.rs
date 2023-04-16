@@ -27,7 +27,7 @@ pub enum IToken {
 
 pub struct Token {
     pub token_type: IToken,
-    pub associativity: IAssociativity,
+    pub associativity: Option<IAssociativity>,
     pub precedence: Option<u8>,
     pub lexeme: String,
 }

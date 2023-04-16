@@ -1,2 +1,2 @@
-pub mod tokens;
 pub mod build_lexer;
+pub mod tokens;
