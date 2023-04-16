@@ -3,17 +3,26 @@ enum IAssociativity {
     Right,
 }
 
+enum IConstants {
+    Pi,
+}
+
+enum IFunctions {
+    Max,
+    Min,
+}
+
 enum IToken {
     Pow,
     Mul,
     Div,
     Add,
     Sub,
-    Fun,
+    Fun(IFunctions),
     LPar,
     RPar,
     Num,
-    Const,
+    Const(IConstants),
 }
 
 struct Token {
