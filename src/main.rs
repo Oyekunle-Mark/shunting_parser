@@ -1,5 +1,7 @@
 use std::{env, error::Error, process};
 
+pub mod lexer;
+
 const PARSER_OPTION: &str = "eval";
 
 fn main() {
