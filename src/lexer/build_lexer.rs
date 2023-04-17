@@ -324,4 +324,106 @@ mod tests {
 
         assert!(number.is_empty());
     }
+
+    #[test]
+    fn build_lexer_returns_tokens() {
+        let token_stream = build_lexer("2+2(3-1)^min(1,0.1)").unwrap();
+
+        assert_eq!(
+            vec![
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("2"),
+                },
+                Token {
+                    token_type: IToken::Add,
+                    associativity: Some(IAssociativity::Left,),
+                    precedence: Some(2,),
+                    lexeme: String::from("+"),
+                },
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("2"),
+                },
+                Token {
+                    token_type: IToken::LPar,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("("),
+                },
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("3"),
+                },
+                Token {
+                    token_type: IToken::Sub,
+                    associativity: Some(IAssociativity::Left,),
+                    precedence: Some(2,),
+                    lexeme: String::from("-"),
+                },
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("1"),
+                },
+                Token {
+                    token_type: IToken::RPar,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from(")"),
+                },
+                Token {
+                    token_type: IToken::Pow,
+                    associativity: Some(IAssociativity::Right,),
+                    precedence: Some(4,),
+                    lexeme: String::from("^"),
+                },
+                Token {
+                    token_type: IToken::Fun(IFunctions::Min,),
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("min"),
+                },
+                Token {
+                    token_type: IToken::LPar,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("("),
+                },
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("1"),
+                },
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from("0.1"),
+                },
+                Token {
+                    token_type: IToken::RPar,
+                    associativity: None,
+                    precedence: None,
+                    lexeme: String::from(")"),
+                },
+            ],
+            token_stream.collect::<Vec<Token>>()
+        );
+    }
+
+    #[test]
+    fn build_lexer_returns_error_result_at_unrecognized_token() {
+        let token_stream = build_lexer("2+2(3-1)_^min(1,0.1)");
+
+        assert!(token_stream.is_err());
+    }
 }
