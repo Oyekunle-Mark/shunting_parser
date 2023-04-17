@@ -110,6 +110,9 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
     Ok(tokens.into_iter())
 }
 
+/// Creates a token using the current string in the identifier
+/// variable and clears the string.
+/// Token can be a function or constant depending on the lexeme.
 fn clear_identifier(identifier: &mut String) -> Option<Token> {
     if identifier.is_empty() {
         return None;
@@ -142,6 +145,8 @@ fn clear_identifier(identifier: &mut String) -> Option<Token> {
     Some(token)
 }
 
+/// Creates a number token using the current string in the number
+/// variable and clears the string.
 fn clear_number(number: &mut String) -> Option<Token> {
     if number.is_empty() {
         return None;
@@ -159,6 +164,7 @@ fn clear_number(number: &mut String) -> Option<Token> {
     Some(token)
 }
 
+/// A convenience over calling clear_identifier and clear_number separately
 fn clear_identifier_or_number(
     identifier: &mut String,
     number: &mut String,
