@@ -83,7 +83,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                 clear_identifier_or_number(&mut identifier, &mut number, &mut tokens);
                 continue;
             }
-            char if char.is_numeric() => {
+            char if char.is_numeric() || char == '.' => {
                 match clear_identifier(&mut identifier) {
                     Some(token) => tokens.push(token),
                     None => (),
