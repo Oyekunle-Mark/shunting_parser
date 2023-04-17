@@ -186,7 +186,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn clear_number_returns_null_when_number_empty() {
+    fn clear_number_returns_none_when_number_empty() {
         let mut number = String::new();
 
         assert!(clear_number(&mut number).is_none());
@@ -212,5 +212,74 @@ mod tests {
         );
 
         assert!(number.is_empty());
+    }
+
+    #[test]
+    fn clear_identifier_returns_none_when_identifier_is_empty() {
+        let mut identifier = String::new();
+
+        assert!(clear_identifier(&mut identifier).is_none());
+
+        let mut identifier = String::from("");
+
+        assert!(clear_identifier(&mut identifier).is_none());
+    }
+
+    #[test]
+    fn clear_identifier_returns_token_and_clears_string() {
+        // min token
+        let mut identifier = String::from("min");
+        let token = clear_identifier(&mut identifier).unwrap();
+
+        assert_eq!(
+            Token {
+                token_type: IToken::Fun(IFunctions::Min),
+                associativity: None,
+                precedence: None,
+                lexeme: String::from("min"),
+            },
+            token
+        );
+
+        assert!(identifier.is_empty());
+
+        // max token
+        let mut identifier = String::from("max");
+        let token = clear_identifier(&mut identifier).unwrap();
+
+        assert_eq!(
+            Token {
+                token_type: IToken::Fun(IFunctions::Max),
+                associativity: None,
+                precedence: None,
+                lexeme: String::from("max"),
+            },
+            token
+        );
+
+        assert!(identifier.is_empty());
+
+        // pi token
+        let mut identifier = String::from("pi");
+        let token = clear_identifier(&mut identifier).unwrap();
+
+        assert_eq!(
+            Token {
+                token_type: IToken::Const(IConstants::Pi),
+                associativity: None,
+                precedence: None,
+                lexeme: String::from("pi"),
+            },
+            token
+        );
+
+        assert!(identifier.is_empty());
+    }
+
+    #[test]
+    #[should_panic(expected = "Unidentified identifier:")]
+    fn clear_identifier_panics_at_invalid_identifier() {
+        let mut identifier = String::from("invalid");
+        let _token = clear_identifier(&mut identifier).unwrap();
     }
 }
