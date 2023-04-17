@@ -1,21 +1,21 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum IAssociativity {
     Left,
     Right,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum IConstants {
     Pi,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum IFunctions {
     Max,
     Min,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum IToken {
     Pow,
     Mul,
@@ -29,7 +29,7 @@ pub enum IToken {
     Const(IConstants),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Token {
     pub token_type: IToken,
     pub associativity: Option<IAssociativity>,

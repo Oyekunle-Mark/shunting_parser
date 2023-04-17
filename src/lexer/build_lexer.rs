@@ -180,3 +180,37 @@ fn clear_identifier_or_number(
         None => (),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn clear_number_returns_null_when_number_empty() {
+        let mut number = String::new();
+
+        assert!(clear_number(&mut number).is_none());
+
+        let mut number = String::from("");
+
+        assert!(clear_number(&mut number).is_none());
+    }
+
+    #[test]
+    fn clear_number_returns_token_for_non_empty_lexeme_and_clears_string() {
+        let mut number = String::from("3.101");
+        let token = clear_number(&mut number).unwrap();
+
+        assert_eq!(
+            Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                lexeme: String::from("3.101"),
+            },
+            token
+        );
+
+        assert!(number.is_empty());
+    }
+}
