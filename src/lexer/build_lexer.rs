@@ -2,6 +2,8 @@ use std::error::Error;
 
 use crate::lexer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
 
+/// Returns a result that can be an iterator of the tokens from expr
+/// or an error if an unrecognized token is discovered in the input
 pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Error>> {
     let mut tokens: Vec<Token> = vec![];
     let mut number = String::new();
