@@ -282,4 +282,46 @@ mod tests {
         let mut identifier = String::from("invalid");
         let _token = clear_identifier(&mut identifier).unwrap();
     }
+
+    #[test]
+    fn clear_identifier_or_number_can_create_token_for_number() {
+        let mut number = String::from("0.331");
+        let mut identifier = String::new();
+        let mut tokens = vec![];
+
+        clear_identifier_or_number(&mut identifier, &mut number, &mut tokens);
+
+        assert_eq!(
+            vec![Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                lexeme: String::from("0.331"),
+            }],
+            tokens
+        );
+
+        assert!(number.is_empty());
+    }
+
+    #[test]
+    fn clear_identifier_or_number_can_create_token_for_identifier() {
+        let mut number = String::new();
+        let mut identifier = String::from("pi");
+        let mut tokens = vec![];
+
+        clear_identifier_or_number(&mut identifier, &mut number, &mut tokens);
+
+        assert_eq!(
+            vec![Token {
+                token_type: IToken::Const(IConstants::Pi),
+                associativity: None,
+                precedence: None,
+                lexeme: String::from("pi"),
+            }],
+            tokens
+        );
+
+        assert!(number.is_empty());
+    }
 }
