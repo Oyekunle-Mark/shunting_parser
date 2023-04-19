@@ -93,6 +93,14 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
         }
     }
 
+    while !operator_stack.is_empty() {
+        if operator_stack.last().unwrap().token_type() == IToken::LPar {
+            panic!("Expression has imbalanced parenthesis");
+        }
+
+        evaluate_operator(&mut value_stack, &mut operator_stack);
+    }
+
     value_stack.pop().unwrap()
 }
 
