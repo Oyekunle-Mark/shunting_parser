@@ -3,6 +3,7 @@ use std::{env, error::Error, process};
 
 pub mod ast;
 pub mod lexer;
+pub mod parser;
 
 const PARSER_OPTION: &str = "eval";
 
