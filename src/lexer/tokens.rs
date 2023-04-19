@@ -34,5 +34,5 @@ pub struct Token {
     pub token_type: IToken,
     pub associativity: Option<IAssociativity>,
     pub precedence: Option<u8>,
-    pub lexeme: Option<f64>,
+    pub literal: Option<f64>,
 }

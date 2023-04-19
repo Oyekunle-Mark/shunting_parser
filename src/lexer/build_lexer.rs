@@ -18,7 +18,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                     token_type: IToken::Pow,
                     associativity: Some(IAssociativity::Right),
                     precedence: Some(4),
-                    lexeme: None,
+                    literal: None,
                 });
             }
             '*' => {
@@ -28,7 +28,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                     token_type: IToken::Mul,
                     associativity: Some(IAssociativity::Left),
                     precedence: Some(3),
-                    lexeme: None,
+                    literal: None,
                 });
             }
             '/' => {
@@ -38,7 +38,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                     token_type: IToken::Div,
                     associativity: Some(IAssociativity::Left),
                     precedence: Some(3),
-                    lexeme: None,
+                    literal: None,
                 });
             }
             '+' => {
@@ -48,7 +48,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                     token_type: IToken::Add,
                     associativity: Some(IAssociativity::Left),
                     precedence: Some(2),
-                    lexeme: None,
+                    literal: None,
                 })
             }
             '-' => {
@@ -58,7 +58,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                     token_type: IToken::Sub,
                     associativity: Some(IAssociativity::Left),
                     precedence: Some(2),
-                    lexeme: None,
+                    literal: None,
                 });
             }
             '(' => {
@@ -68,7 +68,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                     token_type: IToken::LPar,
                     associativity: None,
                     precedence: None,
-                    lexeme: None,
+                    literal: None,
                 });
             }
             ')' => {
@@ -78,7 +78,7 @@ pub fn build_lexer(expr: &str) -> Result<std::vec::IntoIter<Token>, Box<dyn Erro
                     token_type: IToken::RPar,
                     associativity: None,
                     precedence: None,
-                    lexeme: None,
+                    literal: None,
                 });
             }
             ',' | ' ' => {
@@ -125,19 +125,19 @@ fn clear_identifier(identifier: &mut String) -> Option<Token> {
             token_type: IToken::Fun(IFunctions::Min),
             associativity: None,
             precedence: None,
-            lexeme: None,
+            literal: None,
         },
         "max" => Token {
             token_type: IToken::Fun(IFunctions::Max),
             associativity: None,
             precedence: None,
-            lexeme: None,
+            literal: None,
         },
         "pi" => Token {
             token_type: IToken::Const(IConstants::Pi),
             associativity: None,
             precedence: None,
-            lexeme: None,
+            literal: None,
         },
         _ => panic!("Unidentified identifier: {}", identifier),
     };
@@ -158,7 +158,7 @@ fn clear_number(number: &mut String) -> Option<Token> {
         token_type: IToken::Num,
         associativity: None,
         precedence: None,
-        lexeme: Some(number.parse::<f64>().unwrap()),
+        literal: Some(number.parse::<f64>().unwrap()),
     };
 
     number.clear();
@@ -208,7 +208,7 @@ mod tests {
                 token_type: IToken::Num,
                 associativity: None,
                 precedence: None,
-                lexeme: Some(3.101),
+                literal: Some(3.101),
             },
             token
         );
@@ -238,7 +238,7 @@ mod tests {
                 token_type: IToken::Fun(IFunctions::Min),
                 associativity: None,
                 precedence: None,
-                lexeme: None,
+                literal: None,
             },
             token
         );
@@ -254,7 +254,7 @@ mod tests {
                 token_type: IToken::Fun(IFunctions::Max),
                 associativity: None,
                 precedence: None,
-                lexeme: None,
+                literal: None,
             },
             token
         );
@@ -270,7 +270,7 @@ mod tests {
                 token_type: IToken::Const(IConstants::Pi),
                 associativity: None,
                 precedence: None,
-                lexeme: None,
+                literal: None,
             },
             token
         );
@@ -298,7 +298,7 @@ mod tests {
                 token_type: IToken::Num,
                 associativity: None,
                 precedence: None,
-                lexeme: Some(0.331),
+                literal: Some(0.331),
             }],
             tokens
         );
@@ -319,7 +319,7 @@ mod tests {
                 token_type: IToken::Const(IConstants::Pi),
                 associativity: None,
                 precedence: None,
-                lexeme: None,
+                literal: None,
             }],
             tokens
         );
@@ -337,86 +337,86 @@ mod tests {
                     token_type: IToken::Num,
                     associativity: None,
                     precedence: None,
-                    lexeme: Some(2.0),
+                    literal: Some(2.0),
                 },
                 Token {
                     token_type: IToken::Add,
                     associativity: Some(IAssociativity::Left,),
                     precedence: Some(2,),
-                    lexeme: None,
+                    literal: None,
                 },
                 Token {
                     token_type: IToken::Num,
                     associativity: None,
                     precedence: None,
-                    lexeme: Some(2.0),
+                    literal: Some(2.0),
                 },
                 Token {
                     token_type: IToken::LPar,
                     associativity: None,
                     precedence: None,
-                    lexeme: None,
+                    literal: None,
                 },
                 Token {
                     token_type: IToken::Num,
                     associativity: None,
                     precedence: None,
-                    lexeme: Some(3.0),
+                    literal: Some(3.0),
                 },
                 Token {
                     token_type: IToken::Sub,
                     associativity: Some(IAssociativity::Left,),
                     precedence: Some(2,),
-                    lexeme: None,
+                    literal: None,
                 },
                 Token {
                     token_type: IToken::Num,
                     associativity: None,
                     precedence: None,
-                    lexeme: Some(1.0),
+                    literal: Some(1.0),
                 },
                 Token {
                     token_type: IToken::RPar,
                     associativity: None,
                     precedence: None,
-                    lexeme: None,
+                    literal: None,
                 },
                 Token {
                     token_type: IToken::Pow,
                     associativity: Some(IAssociativity::Right,),
                     precedence: Some(4,),
-                    lexeme: None,
+                    literal: None,
                 },
                 Token {
                     token_type: IToken::Fun(IFunctions::Min,),
                     associativity: None,
                     precedence: None,
-                    lexeme: None,
+                    literal: None,
                 },
                 Token {
                     token_type: IToken::LPar,
                     associativity: None,
                     precedence: None,
-                    lexeme: None,
+                    literal: None,
                 },
                 Token {
                     token_type: IToken::Num,
                     associativity: None,
                     precedence: None,
-                    lexeme: Some(1.0),
+                    literal: Some(1.0),
 
                 },
                 Token {
                     token_type: IToken::Num,
                     associativity: None,
                     precedence: None,
-                    lexeme: Some(0.1),
+                    literal: Some(0.1),
                 },
                 Token {
                     token_type: IToken::RPar,
                     associativity: None,
                     precedence: None,
-                    lexeme: None,
+                    literal: None,
                 },
             ],
             token_stream.collect::<Vec<Token>>()

@@ -9,12 +9,12 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
     while let Some(token) = expr.next() {
         match token.token_type {
             IToken::Num => value_stack.push(Box::new(Num {
-                literal: token.lexeme.unwrap(),
+                literal: token.literal.unwrap(),
                 token,
             })),
             IToken::Const(const_type) => match const_type {
                 IConstants::Pi => value_stack.push(Box::new(Const {
-                    literal: token.lexeme.unwrap(),
+                    literal: token.literal.unwrap(),
                     token,
                 })),
             },
