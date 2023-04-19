@@ -1,5 +1,5 @@
 /// Every AST node must implement the evaluate method
-trait AstNode {
+pub trait AstNode {
     fn evaluate(&self) -> f64;
 }
 
@@ -29,7 +29,7 @@ pub struct Sub {
 }
 
 pub struct Num {
-    literal: f64,
+    pub literal: f64,
 }
 
 pub struct Const {
