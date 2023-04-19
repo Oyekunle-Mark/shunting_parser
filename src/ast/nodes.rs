@@ -37,4 +37,59 @@ struct Const {
 
 struct Fun {
     arguments: Vec<Box<dyn AstNode>>,
+    procedure: Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64>,
+}
+
+impl Fun {
+    fn procedure(&self) -> &Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64> {
+        &self.procedure
+    }
+}
+
+impl AstNode for Const {
+    fn evaluate(&self) -> f64 {
+        self.literal
+    }
+}
+
+impl AstNode for Num {
+    fn evaluate(&self) -> f64 {
+        self.literal
+    }
+}
+
+impl AstNode for Sub {
+    fn evaluate(&self) -> f64 {
+        self.left.evaluate() - self.right.evaluate()
+    }
+}
+
+impl AstNode for Add {
+    fn evaluate(&self) -> f64 {
+        self.left.evaluate() + self.right.evaluate()
+    }
+}
+
+impl AstNode for Div {
+    fn evaluate(&self) -> f64 {
+        self.left.evaluate() / self.right.evaluate()
+    }
+}
+
+impl AstNode for Mul {
+    fn evaluate(&self) -> f64 {
+        self.left.evaluate() * self.right.evaluate()
+    }
+}
+
+impl AstNode for Pow {
+    fn evaluate(&self) -> f64 {
+        self.left.evaluate().powf(self.right.evaluate())
+    }
+}
+
+impl AstNode for Fun {
+    fn evaluate(&self) -> f64 {
+        self.procedure()(&self.arguments)
+    }
 }
