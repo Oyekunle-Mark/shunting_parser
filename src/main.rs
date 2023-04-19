@@ -1,6 +1,7 @@
 use crate::lexer::build_lexer::build_lexer;
 use std::{env, error::Error, process};
 
+pub mod ast;
 pub mod lexer;
 
 const PARSER_OPTION: &str = "eval";
