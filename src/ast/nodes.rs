@@ -1,3 +1,4 @@
+/// Every AST node must implement the evaluate method
 trait AstNode {
     fn evaluate(&self) -> f64;
 }
@@ -40,6 +41,8 @@ struct Fun {
     procedure: Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64>,
 }
 
+/// Additionally provided for the Fun node to get the procedure to call on the arguments
+/// in the evaluate method
 impl Fun {
     fn procedure(&self) -> &Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64> {
         &self.procedure
