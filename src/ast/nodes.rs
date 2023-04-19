@@ -47,7 +47,7 @@ pub struct Const {
 }
 
 pub struct Fun {
-    arguments: Vec<Box<dyn AstNode>>,
+    arguments: Option<Vec<Box<dyn AstNode>>>,
     procedure: Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64>,
     token: Token,
 }
@@ -125,7 +125,7 @@ impl AstNode for Pow {
 
 impl AstNode for Fun {
     fn evaluate(&self) -> f64 {
-        self.procedure()(&self.arguments)
+        self.procedure()(&self.arguments.unwrap())
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
