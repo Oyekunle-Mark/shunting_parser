@@ -8,13 +8,9 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
 
     while let Some(token) = expr.next() {
         match token.token_type {
-            IToken::Num => value_stack.push(Box::new(Num {
-                token,
-            })),
+            IToken::Num => value_stack.push(Box::new(Num { token })),
             IToken::Const(const_type) => match const_type {
-                IConstants::Pi => value_stack.push(Box::new(Const {
-                    token,
-                })),
+                IConstants::Pi => value_stack.push(Box::new(Const { token })),
             },
             IToken::Fun(function_type) => match function_type {
                 IFunctions::Min => operator_stack.push(Box::new(Fun {
@@ -54,21 +50,11 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
                 }
 
                 match token.token_type {
-                    IToken::Add => operator_stack.push(Box::new(Add {
-                        token,
-                    })),
-                    IToken::Sub => operator_stack.push(Box::new(Sub {
-                        token,
-                    })),
-                    IToken::Div => operator_stack.push(Box::new(Div {
-                        token,
-                    })),
-                    IToken::Mul => operator_stack.push(Box::new(Mul {
-                        token,
-                    })),
-                    IToken::Pow => operator_stack.push(Box::new(Pow {
-                        token,
-                    })),
+                    IToken::Add => operator_stack.push(Box::new(Add { token })),
+                    IToken::Sub => operator_stack.push(Box::new(Sub { token })),
+                    IToken::Div => operator_stack.push(Box::new(Div { token })),
+                    IToken::Mul => operator_stack.push(Box::new(Mul { token })),
+                    IToken::Pow => operator_stack.push(Box::new(Pow { token })),
                     _ => panic!("Unidentified token {:#?}", token),
                 }
             }
@@ -112,7 +98,10 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
     value_stack.pop().unwrap()
 }
 
-fn evaluate_operator(value_stack: &mut Vec<Box<dyn AstNode>>, operator_stack: &mut Vec<Box<dyn AstNode>>) {
+fn evaluate_operator(
+    value_stack: &mut Vec<Box<dyn AstNode>>,
+    operator_stack: &mut Vec<Box<dyn AstNode>>,
+) {
     let current_op = operator_stack.pop().unwrap();
     let arg_2 = value_stack.pop().unwrap();
     let arg_1 = value_stack.pop().unwrap();

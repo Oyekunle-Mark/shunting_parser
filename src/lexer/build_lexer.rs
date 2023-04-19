@@ -404,7 +404,6 @@ mod tests {
                     associativity: None,
                     precedence: None,
                     literal: Some(1.0),
-
                 },
                 Token {
                     token_type: IToken::Num,
