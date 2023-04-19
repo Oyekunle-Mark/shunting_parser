@@ -13,32 +13,8 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
                 IConstants::Pi => value_stack.push(Box::new(Const { token })),
             },
             IToken::Fun(function_type) => match function_type {
-                IFunctions::Min => operator_stack.push(Box::new(Fun {
-                    token,
-                    arguments: None,
-                    procedure: Box::new(|args| {
-                        let first = args[0].evaluate();
-                        let second = args[1].evaluate();
-                        if first < second {
-                            first
-                        } else {
-                            second
-                        }
-                    }),
-                })),
-                IFunctions::Max => operator_stack.push(Box::new(Fun {
-                    token,
-                    arguments: None,
-                    procedure: Box::new(|args| {
-                        let first = args[0].evaluate();
-                        let second = args[1].evaluate();
-                        if first > second {
-                            first
-                        } else {
-                            second
-                        }
-                    }),
-                })),
+                IFunctions::Min => operator_stack.push(Box::new(Fun { token })),
+                IFunctions::Max => operator_stack.push(Box::new(Fun { token })),
             },
             IToken::Add | IToken::Sub | IToken::Div | IToken::Mul | IToken::Pow => {
                 while !operator_stack.is_empty()
@@ -62,8 +38,6 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
             IToken::RPar => {
                 while !operator_stack.is_empty()
                     && operator_stack.last().unwrap().token_type() != IToken::LPar
-                    && operator_stack.last().unwrap().precedence() >= token.precedence
-                    && token.associativity.unwrap() == IAssociativity::Left
                 {
                     evaluate_operator(&mut value_stack, &mut operator_stack);
                 }
@@ -78,18 +52,42 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
 
                 if !operator_stack.is_empty()
                     && operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Max)
-                    || operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Min)
                 {
-                    let mut fn_node = operator_stack.pop().unwrap();
-                    // these arguments should be pass in the reverse order
-                    // ignoring that because the MIN and MAX functions we have
-                    // are both argument order agnostic
-                    fn_node.set_arguments(vec![
-                        value_stack.pop().unwrap(),
-                        value_stack.pop().unwrap(),
-                    ]);
+                    let _fn_node = operator_stack.pop().unwrap();
+                    let arg_2 = value_stack.pop().unwrap();
+                    let arg_1 = value_stack.pop().unwrap();
 
-                    value_stack.push(fn_node);
+                    value_stack.push(Box::new(Num {
+                        token: Token {
+                            token_type: IToken::Num,
+                            associativity: None,
+                            precedence: None,
+                            literal: Some(if arg_1.evaluate() > arg_2.evaluate() {
+                                arg_1.evaluate()
+                            } else {
+                                arg_2.evaluate()
+                            }),
+                        },
+                    }));
+                } else if !operator_stack.is_empty()
+                    && operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Min)
+                {
+                    let _fn_node = operator_stack.pop().unwrap();
+                    let arg_2 = value_stack.pop().unwrap();
+                    let arg_1 = value_stack.pop().unwrap();
+
+                    value_stack.push(Box::new(Num {
+                        token: Token {
+                            token_type: IToken::Num,
+                            associativity: None,
+                            precedence: None,
+                            literal: Some(if arg_1.evaluate() < arg_2.evaluate() {
+                                arg_1.evaluate()
+                            } else {
+                                arg_2.evaluate()
+                            }),
+                        },
+                    }));
                 }
             }
         }
