@@ -1,5 +1,5 @@
-use crate::ast::nodes::{AstNode, Const, Fun, Num};
-use crate::lexer::tokens::{IConstants, IFunctions, IToken, Token};
+use crate::ast::nodes::{Add, AstNode, Const, Div, Fun, LPar, Mul, Num, Pow, Sub};
+use crate::lexer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
 use std::vec::IntoIter;
 
 pub fn parse_expression(expr: &IntoIter<Token>) -> Box<dyn AstNode> {
@@ -46,6 +46,75 @@ pub fn parse_expression(expr: &IntoIter<Token>) -> Box<dyn AstNode> {
                     }),
                 })),
             },
+            IToken::Add | IToken::Sub | IToken::Div | IToken::Mul | IToken::Pow => {
+                while !operator_stack.is_empty()
+                    && operator_stack.last().unwrap().token_type() != IToken::LPar
+                    && operator_stack.last().unwrap().precedence() >= token.precedence
+                    && token.associativity.unwrap() == IAssociativity::Left
+                {
+                    // return to build nodes from the popped operators
+                    value_stack.push(operator_stack.pop().unwrap());
+                }
+
+                match token.token_type {
+                    IToken::Add => operator_stack.push(Box::new(Add {
+                        token,
+                        left: None,
+                        right: None,
+                    })),
+                    IToken::Sub => operator_stack.push(Box::new(Sub {
+                        token,
+                        left: None,
+                        right: None,
+                    })),
+                    IToken::Div => operator_stack.push(Box::new(Div {
+                        token,
+                        left: None,
+                        right: None,
+                    })),
+                    IToken::Mul => operator_stack.push(Box::new(Mul {
+                        token,
+                        left: None,
+                        right: None,
+                    })),
+                    IToken::Pow => operator_stack.push(Box::new(Pow {
+                        token,
+                        left: None,
+                        right: None,
+                    })),
+                    _ => panic!("Unidentified token {:#?}", token),
+                }
+            }
+            IToken::LPar => operator_stack.push(Box::new(LPar { token })),
+            IToken::RPar => {
+                while !operator_stack.is_empty()
+                    && operator_stack.last().unwrap().token_type() != IToken::LPar
+                    && operator_stack.last().unwrap().precedence() >= token.precedence
+                    && token.associativity.unwrap() == IAssociativity::Left
+                {
+                    // return to build nodes from the popped operators
+                    value_stack.push(operator_stack.pop().unwrap());
+                }
+
+                if !operator_stack.is_empty()
+                    && operator_stack.last().unwrap().token_type() == IToken::LPar
+                {
+                    operator_stack.pop();
+                } else {
+                    panic!("Expression has imbalanced parenthesis");
+                }
+
+                if !operator_stack.is_empty()
+                    && operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Max)
+                    || operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Min)
+                {
+                    let fn_node = operator_stack.pop().unwrap();
+                    fn_node.set_arguments(vec![
+                        value_stack.pop().unwrap(),
+                        value_stack.pop().unwrap(),
+                    ]);
+                }
+            }
         }
     }
 

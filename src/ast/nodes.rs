@@ -1,38 +1,42 @@
-use crate::lexer::tokens::Token;
+use crate::lexer::tokens::{IToken, Token};
 
 /// Every AST node must implement the evaluate method
 pub trait AstNode {
     fn evaluate(&self) -> f64;
     fn precedence(&self) -> Option<u8>;
+    fn token_type(&self) -> IToken;
+    fn set_arguments(&mut self, args: Vec<Box<dyn AstNode>>) {
+        panic!("Not implemented");
+    }
 }
 
 pub struct Pow {
-    left: Box<dyn AstNode>,
-    right: Box<dyn AstNode>,
+    left: Option<Box<dyn AstNode>>,
+    right: Option<Box<dyn AstNode>>,
     token: Token,
 }
 
 pub struct Mul {
-    left: Box<dyn AstNode>,
-    right: Box<dyn AstNode>,
+    left: Option<Box<dyn AstNode>>,
+    right: Option<Box<dyn AstNode>>,
     token: Token,
 }
 
 pub struct Div {
-    left: Box<dyn AstNode>,
-    right: Box<dyn AstNode>,
+    left: Option<Box<dyn AstNode>>,
+    right: Option<Box<dyn AstNode>>,
     token: Token,
 }
 
 pub struct Add {
-    left: Box<dyn AstNode>,
-    right: Box<dyn AstNode>,
+    left: Option<Box<dyn AstNode>>,
+    right: Option<Box<dyn AstNode>>,
     token: Token,
 }
 
 pub struct Sub {
-    left: Box<dyn AstNode>,
-    right: Box<dyn AstNode>,
+    left: Option<Box<dyn AstNode>>,
+    right: Option<Box<dyn AstNode>>,
     token: Token,
 }
 
@@ -52,6 +56,11 @@ pub struct Fun {
     token: Token,
 }
 
+/// mere tombstone for handling parenthesis
+pub struct LPar {
+    token: Token,
+}
+
 /// Additionally provided for the Fun node to get the procedure to call on the arguments
 /// in the evaluate method
 impl Fun {
@@ -67,6 +76,9 @@ impl AstNode for Const {
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
     }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
+    }
 }
 
 impl AstNode for Num {
@@ -76,50 +88,71 @@ impl AstNode for Num {
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
     }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
+    }
 }
 
 impl AstNode for Sub {
     fn evaluate(&self) -> f64 {
-        self.left.evaluate() - self.right.evaluate()
+        self.left.unwrap().evaluate() - self.right.unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
+    }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
     }
 }
 
 impl AstNode for Add {
     fn evaluate(&self) -> f64 {
-        self.left.evaluate() + self.right.evaluate()
+        self.left.unwrap().evaluate() + self.right.unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
+    }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
     }
 }
 
 impl AstNode for Div {
     fn evaluate(&self) -> f64 {
-        self.left.evaluate() / self.right.evaluate()
+        self.left.unwrap().evaluate() / self.right.unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
+    }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
     }
 }
 
 impl AstNode for Mul {
     fn evaluate(&self) -> f64 {
-        self.left.evaluate() * self.right.evaluate()
+        self.left.unwrap().evaluate() * self.right.unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
+    }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
     }
 }
 
 impl AstNode for Pow {
     fn evaluate(&self) -> f64 {
-        self.left.evaluate().powf(self.right.evaluate())
+        self.left
+            .unwrap()
+            .evaluate()
+            .powf(self.right.unwrap().evaluate())
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
+    }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
     }
 }
 
@@ -129,5 +162,23 @@ impl AstNode for Fun {
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
+    }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
+    }
+    fn set_arguments(&mut self, args: Vec<Box<dyn AstNode>>) {
+        self.arguments = Some(args);
+    }
+}
+
+impl AstNode for LPar {
+    fn evaluate(&self) -> f64 {
+        panic!("Invalid operation on a LPar");
+    }
+    fn precedence(&self) -> Option<u8> {
+        self.token.precedence
+    }
+    fn token_type(&self) -> IToken {
+        self.token.token_type
     }
 }
