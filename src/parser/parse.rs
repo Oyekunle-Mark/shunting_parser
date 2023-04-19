@@ -2,20 +2,20 @@ use crate::ast::nodes::{Add, AstNode, Const, Div, Fun, LPar, Mul, Num, Pow, Sub}
 use crate::lexer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
 use std::vec::IntoIter;
 
-pub fn parse_expression(expr: &IntoIter<Token>) -> Box<dyn AstNode> {
+pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
     let mut value_stack: Vec<Box<dyn AstNode>> = Vec::new();
     let mut operator_stack: Vec<Box<dyn AstNode>> = Vec::new();
 
     while let Some(token) = expr.next() {
         match token.token_type {
             IToken::Num => value_stack.push(Box::new(Num {
+                literal: token.lexeme.unwrap(),
                 token,
-                literal: token.lexeme.parse::<f64>().unwrap(),
             })),
             IToken::Const(const_type) => match const_type {
                 IConstants::Pi => value_stack.push(Box::new(Const {
+                    literal: token.lexeme.unwrap(),
                     token,
-                    literal: token.lexeme.parse::<f64>().unwrap(),
                 })),
             },
             IToken::Fun(function_type) => match function_type {
@@ -108,7 +108,7 @@ pub fn parse_expression(expr: &IntoIter<Token>) -> Box<dyn AstNode> {
                     && operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Max)
                     || operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Min)
                 {
-                    let fn_node = operator_stack.pop().unwrap();
+                    let mut fn_node = operator_stack.pop().unwrap();
                     fn_node.set_arguments(vec![
                         value_stack.pop().unwrap(),
                         value_stack.pop().unwrap(),
@@ -118,5 +118,5 @@ pub fn parse_expression(expr: &IntoIter<Token>) -> Box<dyn AstNode> {
         }
     }
 
-    value_stack.first().unwrap()
+    value_stack.pop().unwrap()
 }

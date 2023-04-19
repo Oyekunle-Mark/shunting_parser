@@ -11,54 +11,54 @@ pub trait AstNode {
 }
 
 pub struct Pow {
-    left: Option<Box<dyn AstNode>>,
-    right: Option<Box<dyn AstNode>>,
-    token: Token,
+    pub left: Option<Box<dyn AstNode>>,
+    pub right: Option<Box<dyn AstNode>>,
+    pub token: Token,
 }
 
 pub struct Mul {
-    left: Option<Box<dyn AstNode>>,
-    right: Option<Box<dyn AstNode>>,
-    token: Token,
+    pub left: Option<Box<dyn AstNode>>,
+    pub right: Option<Box<dyn AstNode>>,
+    pub token: Token,
 }
 
 pub struct Div {
-    left: Option<Box<dyn AstNode>>,
-    right: Option<Box<dyn AstNode>>,
-    token: Token,
+    pub left: Option<Box<dyn AstNode>>,
+    pub right: Option<Box<dyn AstNode>>,
+    pub token: Token,
 }
 
 pub struct Add {
-    left: Option<Box<dyn AstNode>>,
-    right: Option<Box<dyn AstNode>>,
-    token: Token,
+    pub left: Option<Box<dyn AstNode>>,
+    pub right: Option<Box<dyn AstNode>>,
+    pub token: Token,
 }
 
 pub struct Sub {
-    left: Option<Box<dyn AstNode>>,
-    right: Option<Box<dyn AstNode>>,
-    token: Token,
+    pub left: Option<Box<dyn AstNode>>,
+    pub right: Option<Box<dyn AstNode>>,
+    pub token: Token,
 }
 
 pub struct Num {
-    literal: f64,
-    token: Token,
+    pub literal: f64,
+    pub token: Token,
 }
 
 pub struct Const {
-    literal: f64,
-    token: Token,
+    pub literal: f64,
+    pub token: Token,
 }
 
 pub struct Fun {
-    arguments: Option<Vec<Box<dyn AstNode>>>,
-    procedure: Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64>,
-    token: Token,
+    pub arguments: Option<Vec<Box<dyn AstNode>>>,
+    pub procedure: Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64>,
+    pub token: Token,
 }
 
 /// mere tombstone for handling parenthesis
 pub struct LPar {
-    token: Token,
+    pub token: Token,
 }
 
 /// Additionally provided for the Fun node to get the procedure to call on the arguments
@@ -95,7 +95,7 @@ impl AstNode for Num {
 
 impl AstNode for Sub {
     fn evaluate(&self) -> f64 {
-        self.left.unwrap().evaluate() - self.right.unwrap().evaluate()
+        self.left.as_ref().unwrap().evaluate() - self.right.as_ref().unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
@@ -107,7 +107,7 @@ impl AstNode for Sub {
 
 impl AstNode for Add {
     fn evaluate(&self) -> f64 {
-        self.left.unwrap().evaluate() + self.right.unwrap().evaluate()
+        self.left.as_ref().unwrap().evaluate() + self.right.as_ref().unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
@@ -119,7 +119,7 @@ impl AstNode for Add {
 
 impl AstNode for Div {
     fn evaluate(&self) -> f64 {
-        self.left.unwrap().evaluate() / self.right.unwrap().evaluate()
+        self.left.as_ref().unwrap().evaluate() / self.right.as_ref().unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
@@ -131,7 +131,7 @@ impl AstNode for Div {
 
 impl AstNode for Mul {
     fn evaluate(&self) -> f64 {
-        self.left.unwrap().evaluate() * self.right.unwrap().evaluate()
+        self.left.as_ref().unwrap().evaluate() * self.right.as_ref().unwrap().evaluate()
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
@@ -143,10 +143,10 @@ impl AstNode for Mul {
 
 impl AstNode for Pow {
     fn evaluate(&self) -> f64 {
-        self.left
+        self.left.as_ref()
             .unwrap()
             .evaluate()
-            .powf(self.right.unwrap().evaluate())
+            .powf(self.right.as_ref().unwrap().evaluate())
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
@@ -158,7 +158,7 @@ impl AstNode for Pow {
 
 impl AstNode for Fun {
     fn evaluate(&self) -> f64 {
-        self.procedure()(&self.arguments.unwrap())
+        self.procedure()(&self.arguments.as_ref().unwrap())
     }
     fn precedence(&self) -> Option<u8> {
         self.token.precedence
