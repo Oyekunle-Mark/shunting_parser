@@ -137,7 +137,7 @@ fn clear_identifier(identifier: &mut String) -> Option<Token> {
             token_type: IToken::Const(IConstants::Pi),
             associativity: None,
             precedence: None,
-            literal: None,
+            literal: Some(3.14159265359),
         },
         _ => panic!("Unidentified identifier: {}", identifier),
     };

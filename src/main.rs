@@ -1,4 +1,4 @@
-use crate::lexer::build_lexer::build_lexer;
+use shunting_parser::evaluate_expression;
 use std::{env, error::Error, process};
 
 pub mod ast;
@@ -15,16 +15,7 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Expression to be evaluated is: {}", expr);
-
-    let tokens = build_lexer(expr).unwrap_or_else(|error| {
-        eprintln!("{}", error);
-        process::exit(1);
-    });
-
-    print!("Tokens in expression:");
-
-    tokens.for_each(|token| println!("{:#?}", token));
+    println!("> {}", evaluate_expression(expr));
 }
 
 fn parse_config(args: &Vec<String>) -> Result<&str, Box<dyn Error>> {

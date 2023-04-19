@@ -1,7 +1,7 @@
 use crate::ast::nodes::{Add, AstNode, Const, Div, Fun, LPar, Mul, Num, Pow, Sub};
 use crate::lexer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
-use std::vec::IntoIter;
 use std::process;
+use std::vec::IntoIter;
 
 pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
     let mut value_stack: Vec<Box<dyn AstNode>> = Vec::new();
