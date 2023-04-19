@@ -1,10 +1,16 @@
 use crate::ast::nodes::{Add, AstNode, Const, Div, Fun, LPar, Mul, Num, Pow, Sub};
 use crate::lexer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
 use std::vec::IntoIter;
+use std::process;
 
 pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
     let mut value_stack: Vec<Box<dyn AstNode>> = Vec::new();
     let mut operator_stack: Vec<Box<dyn AstNode>> = Vec::new();
+
+    let handle_missing_value = || {
+        eprintln!("Imbalance input supplied");
+        process::exit(1);
+    };
 
     while let Some(token) = expr.next() {
         match token.token_type {
@@ -54,8 +60,8 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
                     && operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Max)
                 {
                     let _fn_node = operator_stack.pop().unwrap();
-                    let arg_2 = value_stack.pop().unwrap();
-                    let arg_1 = value_stack.pop().unwrap();
+                    let arg_2 = value_stack.pop().unwrap_or_else(handle_missing_value);
+                    let arg_1 = value_stack.pop().unwrap_or_else(handle_missing_value);
 
                     value_stack.push(Box::new(Num {
                         token: Token {
@@ -73,8 +79,8 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
                     && operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Min)
                 {
                     let _fn_node = operator_stack.pop().unwrap();
-                    let arg_2 = value_stack.pop().unwrap();
-                    let arg_1 = value_stack.pop().unwrap();
+                    let arg_2 = value_stack.pop().unwrap_or_else(handle_missing_value);
+                    let arg_1 = value_stack.pop().unwrap_or_else(handle_missing_value);
 
                     value_stack.push(Box::new(Num {
                         token: Token {
@@ -108,9 +114,14 @@ fn evaluate_operator(
     value_stack: &mut Vec<Box<dyn AstNode>>,
     operator_stack: &mut Vec<Box<dyn AstNode>>,
 ) {
+    let handle_missing_value = || {
+        eprintln!("Imbalance input supplied");
+        process::exit(1);
+    };
+
     let current_op = operator_stack.pop().unwrap();
-    let arg_2 = value_stack.pop().unwrap();
-    let arg_1 = value_stack.pop().unwrap();
+    let arg_2 = value_stack.pop().unwrap_or_else(handle_missing_value);
+    let arg_1 = value_stack.pop().unwrap_or_else(handle_missing_value);
 
     match current_op.token_type() {
         IToken::Add => value_stack.push(Box::new(Num {
