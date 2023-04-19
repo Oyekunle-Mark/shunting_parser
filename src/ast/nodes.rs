@@ -3,40 +3,40 @@ trait AstNode {
     fn evaluate(&self) -> f64;
 }
 
-struct Pow {
+pub struct Pow {
     left: Box<dyn AstNode>,
     right: Box<dyn AstNode>,
 }
 
-struct Mul {
+pub struct Mul {
     left: Box<dyn AstNode>,
     right: Box<dyn AstNode>,
 }
 
-struct Div {
+pub struct Div {
     left: Box<dyn AstNode>,
     right: Box<dyn AstNode>,
 }
 
-struct Add {
+pub struct Add {
     left: Box<dyn AstNode>,
     right: Box<dyn AstNode>,
 }
 
-struct Sub {
+pub struct Sub {
     left: Box<dyn AstNode>,
     right: Box<dyn AstNode>,
 }
 
-struct Num {
+pub struct Num {
     literal: f64,
 }
 
-struct Const {
+pub struct Const {
     literal: f64,
 }
 
-struct Fun {
+pub struct Fun {
     arguments: Vec<Box<dyn AstNode>>,
     procedure: Box<dyn Fn(&Vec<Box<dyn AstNode>>) -> f64>,
 }
