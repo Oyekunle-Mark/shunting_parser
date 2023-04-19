@@ -9,12 +9,10 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
     while let Some(token) = expr.next() {
         match token.token_type {
             IToken::Num => value_stack.push(Box::new(Num {
-                literal: token.literal.unwrap(),
                 token,
             })),
             IToken::Const(const_type) => match const_type {
                 IConstants::Pi => value_stack.push(Box::new(Const {
-                    literal: token.literal.unwrap(),
                     token,
                 })),
             },
@@ -52,35 +50,24 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
                     && operator_stack.last().unwrap().precedence() >= token.precedence
                     && token.associativity.unwrap() == IAssociativity::Left
                 {
-                    // return to build nodes from the popped operators
-                    value_stack.push(operator_stack.pop().unwrap());
+                    evaluate_operator(&mut value_stack, &mut operator_stack);
                 }
 
                 match token.token_type {
                     IToken::Add => operator_stack.push(Box::new(Add {
                         token,
-                        left: None,
-                        right: None,
                     })),
                     IToken::Sub => operator_stack.push(Box::new(Sub {
                         token,
-                        left: None,
-                        right: None,
                     })),
                     IToken::Div => operator_stack.push(Box::new(Div {
                         token,
-                        left: None,
-                        right: None,
                     })),
                     IToken::Mul => operator_stack.push(Box::new(Mul {
                         token,
-                        left: None,
-                        right: None,
                     })),
                     IToken::Pow => operator_stack.push(Box::new(Pow {
                         token,
-                        left: None,
-                        right: None,
                     })),
                     _ => panic!("Unidentified token {:#?}", token),
                 }
@@ -92,8 +79,7 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
                     && operator_stack.last().unwrap().precedence() >= token.precedence
                     && token.associativity.unwrap() == IAssociativity::Left
                 {
-                    // return to build nodes from the popped operators
-                    value_stack.push(operator_stack.pop().unwrap());
+                    evaluate_operator(&mut value_stack, &mut operator_stack);
                 }
 
                 if !operator_stack.is_empty()
@@ -109,14 +95,69 @@ pub fn parse_expression(expr: &mut IntoIter<Token>) -> Box<dyn AstNode> {
                     || operator_stack.last().unwrap().token_type() == IToken::Fun(IFunctions::Min)
                 {
                     let mut fn_node = operator_stack.pop().unwrap();
+                    // these arguments should be pass in the reverse order
+                    // ignoring that because the MIN and MAX functions we have
+                    // are both argument order agnostic
                     fn_node.set_arguments(vec![
                         value_stack.pop().unwrap(),
                         value_stack.pop().unwrap(),
                     ]);
+
+                    value_stack.push(fn_node);
                 }
             }
         }
     }
 
     value_stack.pop().unwrap()
+}
+
+fn evaluate_operator(value_stack: &mut Vec<Box<dyn AstNode>>, operator_stack: &mut Vec<Box<dyn AstNode>>) {
+    let current_op = operator_stack.pop().unwrap();
+    let arg_2 = value_stack.pop().unwrap();
+    let arg_1 = value_stack.pop().unwrap();
+
+    match current_op.token_type() {
+        IToken::Add => value_stack.push(Box::new(Num {
+            token: Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                literal: Some(arg_1.evaluate() + arg_2.evaluate()),
+            },
+        })),
+        IToken::Sub => value_stack.push(Box::new(Num {
+            token: Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                literal: Some(arg_1.evaluate() - arg_2.evaluate()),
+            },
+        })),
+        IToken::Div => value_stack.push(Box::new(Num {
+            token: Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                literal: Some(arg_1.evaluate() / arg_2.evaluate()),
+            },
+        })),
+        IToken::Mul => value_stack.push(Box::new(Num {
+            token: Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                literal: Some(arg_1.evaluate() * arg_2.evaluate()),
+            },
+        })),
+        IToken::Pow => value_stack.push(Box::new(Num {
+            token: Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                literal: Some(arg_1.evaluate().powf(arg_2.evaluate())),
+            },
+        })),
+        _ => panic!("Unidentified token {:#?}", current_op.token()),
+    }
 }
