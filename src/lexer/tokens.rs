@@ -1,21 +1,21 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum IAssociativity {
     Left,
     Right,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum IConstants {
     Pi,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum IFunctions {
     Max,
     Min,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum IToken {
     Pow,
     Mul,
@@ -29,10 +29,10 @@ pub enum IToken {
     Const(IConstants),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Token {
     pub token_type: IToken,
     pub associativity: Option<IAssociativity>,
     pub precedence: Option<u8>,
-    pub lexeme: String,
+    pub literal: Option<f64>,
 }
