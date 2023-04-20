@@ -1,9 +1,9 @@
-use shunting_parser::evaluate_expression;
+use shunting_parser::evaluate_expression_shunting_yard;
 use std::{env, error::Error, process};
 
 pub mod ast;
-pub mod lexer;
 pub mod shunting_yard_parser;
+pub mod tokenizer;
 
 const PARSER_OPTION: &str = "eval";
 
@@ -15,7 +15,7 @@ fn main() {
         process::exit(1);
     });
 
-    println!("> {}", evaluate_expression(expr));
+    println!("> {}", evaluate_expression_shunting_yard(expr));
 }
 
 fn parse_config(args: &Vec<String>) -> Result<&str, Box<dyn Error>> {

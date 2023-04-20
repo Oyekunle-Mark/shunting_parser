@@ -1,4 +1,4 @@
-use crate::lexer::tokens::{IToken, Token};
+use crate::tokenizer::tokens::{IToken, Token};
 
 pub trait AstNode {
     fn evaluate(&self) -> f64 {

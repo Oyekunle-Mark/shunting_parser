@@ -1,5 +1,5 @@
 use crate::ast::nodes::{Add, AstNode, Const, Div, Fun, LPar, Mul, Num, Pow, Sub};
-use crate::lexer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
+use crate::tokenizer::tokens::{IAssociativity, IConstants, IFunctions, IToken, Token};
 use std::process;
 use std::vec::IntoIter;
 
@@ -8,7 +8,7 @@ pub struct ShuntingYardParser {
 }
 
 impl ShuntingYardParser {
-    pub fn build(expr: &mut IntoIter<Token>) -> Self {
+    pub fn build(token_stream: &mut IntoIter<Token>) -> Self {
         let mut value_stack: Vec<Box<dyn AstNode>> = Vec::new();
         let mut operator_stack: Vec<Box<dyn AstNode>> = Vec::new();
 
@@ -17,7 +17,7 @@ impl ShuntingYardParser {
             process::exit(1);
         };
 
-        while let Some(token) = expr.next() {
+        while let Some(token) = token_stream.next() {
             match token.token_type {
                 IToken::Num => value_stack.push(Box::new(Num { token })),
                 IToken::Const(const_type) => match const_type {
