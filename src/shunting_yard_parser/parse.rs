@@ -8,6 +8,12 @@ pub struct ShuntingYardParser {
 }
 
 impl ShuntingYardParser {
+    /// Builds the ShuntingYardParser struct and the AST from the
+    /// token_stream which is stored in the private ast field.
+    /// The algorithm is a variation of the popular Shunting Yard Algorithm(https://en.wikipedia.org/wiki/Shunting_yard_algorithm)
+    /// for expression parsing.
+    /// The modification is for generating an AST(of sort) instead
+    /// of producing result in Reverse Polish notation.
     pub fn build(token_stream: &mut IntoIter<Token>) -> Self {
         let mut value_stack: Vec<Box<dyn AstNode>> = Vec::new();
         let mut operator_stack: Vec<Box<dyn AstNode>> = Vec::new();
@@ -119,6 +125,9 @@ impl ShuntingYardParser {
         }
     }
 
+    /// A helper for processing operators as they are popped from the operator_stack
+    /// Pops the operator, gets its operands from the value_stack and returns
+    /// a Num node back to the value stack representing the result of the operation
     fn evaluate_operator(
         value_stack: &mut Vec<Box<dyn AstNode>>,
         operator_stack: &mut Vec<Box<dyn AstNode>>,
@@ -177,6 +186,7 @@ impl ShuntingYardParser {
         }
     }
 
+    /// Evaluates the ast field and returns the result of the evaluation
     pub fn evaluate(&self) -> f64 {
         self.ast.evaluate()
     }

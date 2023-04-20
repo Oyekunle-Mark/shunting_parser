@@ -8,6 +8,9 @@ pub struct Tokenizer {
 }
 
 impl Tokenizer {
+    /// Takes a string slice represent the expression to be tokenized
+    /// and returns a Tokenizer struct with a private token_steam represent
+    /// a Result of the iterator stream or an error.
     pub fn build(expr: &str) -> Self {
         let mut tokens: Vec<Token> = vec![];
         let mut number = String::new();
@@ -194,6 +197,7 @@ impl Tokenizer {
         }
     }
 
+    // Returns the token_steam Result
     pub fn tokens(&mut self) -> &mut Result<std::vec::IntoIter<Token>, Error> {
         &mut self.token_stream
     }
