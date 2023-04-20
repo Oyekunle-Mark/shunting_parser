@@ -10,7 +10,7 @@ pub struct ShuntingYardParser {
 impl ShuntingYardParser {
     /// Builds the ShuntingYardParser struct and the AST from the
     /// token_stream which is stored in the private ast field.
-    /// The algorithm is a variation of the popular Shunting Yard Algorithm(https://en.wikipedia.org/wiki/Shunting_yard_algorithm)
+    /// The algorithm is a variation of the popular Shunting Yard Algorithm(<https://en.wikipedia.org/wiki/Shunting_yard_algorithm>)
     /// for expression parsing.
     /// The modification is for generating an AST(of sort) instead
     /// of producing result in Reverse Polish notation.
