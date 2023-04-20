@@ -191,3 +191,62 @@ impl ShuntingYardParser {
         self.ast.evaluate()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn build_creates_type() {
+        let shuting_parser_type = ShuntingYardParser::build(
+            &mut vec![
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    literal: Some(2.0),
+                },
+                Token {
+                    token_type: IToken::Add,
+                    associativity: Some(IAssociativity::Left),
+                    precedence: Some(2),
+                    literal: None,
+                },
+                Token {
+                    token_type: IToken::Num,
+                    associativity: None,
+                    precedence: None,
+                    literal: Some(2.0),
+                },
+            ]
+            .into_iter(),
+        );
+
+        assert_eq!(shuting_parser_type.evaluate(), 4.0);
+    }
+
+    #[test]
+    fn parser_can_correctly_evaluate_expressions() {
+        assert_eq!(ShuntingYardParser::build(&mut vec![
+            Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                literal: Some(2.0),
+            },
+            Token {
+                token_type: IToken::Add,
+                associativity: Some(IAssociativity::Left),
+                precedence: Some(2),
+                literal: None,
+            },
+            Token {
+                token_type: IToken::Num,
+                associativity: None,
+                precedence: None,
+                literal: Some(2.0),
+            },
+        ]
+        .into_iter()).evaluate(), 4.0)
+    }
+}

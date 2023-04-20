@@ -348,7 +348,7 @@ mod tests {
     }
 
     #[test]
-    fn build_lexer_returns_tokens() {
+    fn build_method_builds_tokens() {
         let mut binding = Tokenizer::build("2+2(3-1)^min(1,0.1)");
         let token_stream = binding.tokens().as_mut().unwrap();
 
@@ -444,7 +444,7 @@ mod tests {
     }
 
     #[test]
-    fn build_lexer_returns_error_result_at_unrecognized_token() {
+    fn build_returns_error_result_at_unrecognized_token() {
         let mut binding = Tokenizer::build("2+2(3-1)_^min(1,0.1)");
         let token_stream = binding.tokens();
 
