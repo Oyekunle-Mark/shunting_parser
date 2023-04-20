@@ -3,7 +3,7 @@ use std::{env, error::Error, process};
 
 pub mod ast;
 pub mod lexer;
-pub mod parser;
+pub mod shunting_yard_parser;
 
 const PARSER_OPTION: &str = "eval";
 
