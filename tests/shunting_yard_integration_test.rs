@@ -44,6 +44,8 @@ fn can_evaluate_expressions_with_functions() {
 fn can_evaluate_expressions_with_simple_operators_and_parenthesis_and_functions() {
     assert_eq!(
         3.0001220703125,
-        shunting_parser::evaluate_expression_shunting_yard("3 + 4 * 2 / ( 1 - max(5, 2) ) ^ min(2,11) ^ 3")
+        shunting_parser::evaluate_expression_shunting_yard(
+            "3 + 4 * 2 / ( 1 - max(5, 2) ) ^ min(2,11) ^ 3"
+        )
     );
 }
