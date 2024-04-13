@@ -1,6 +1,6 @@
 # shunting_parser
 
-An expression parser which uses the Shunting Yard Algorithm for parsing arithmetic expressions.
+An expression parser which uses the [Shunting Yard Algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm) for parsing arithmetic expressions.
 
 ## Usage
 
